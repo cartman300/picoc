@@ -111,11 +111,11 @@ void StdioFprintfWord(StdOutStream *Stream, const char *Format, unsigned long Va
     else if (Stream->StrOutLen >= 0)
     {
 #ifndef WIN32
-		int CCount = snprintf(Stream->StrOutPtr, Stream->StrOutLen, Format, Value);
+        int CCount = snprintf(Stream->StrOutPtr, Stream->StrOutLen, Format, Value);
 #else
-		int CCount = _snprintf(Stream->StrOutPtr, Stream->StrOutLen, Format, Value);
+        int CCount = _snprintf(Stream->StrOutPtr, Stream->StrOutLen, Format, Value);
 #endif
-		Stream->StrOutPtr += CCount;
+        Stream->StrOutPtr += CCount;
         Stream->StrOutLen -= CCount;
         Stream->CharCount += CCount;
     }
@@ -140,7 +140,7 @@ void StdioFprintfFP(StdOutStream *Stream, const char *Format, double Value)
 #else
         int CCount = _snprintf(Stream->StrOutPtr, Stream->StrOutLen, Format, Value);
 #endif
-		Stream->StrOutPtr += CCount;
+        Stream->StrOutPtr += CCount;
         Stream->StrOutLen -= CCount;
         Stream->CharCount += CCount;
     }
@@ -163,7 +163,7 @@ void StdioFprintfPointer(StdOutStream *Stream, const char *Format, void *Value)
 #ifndef WIN32
         int CCount = snprintf(Stream->StrOutPtr, Stream->StrOutLen, Format, Value);
 #else
-		int CCount = _snprintf(Stream->StrOutPtr, Stream->StrOutLen, Format, Value);
+        int CCount = _snprintf(Stream->StrOutPtr, Stream->StrOutLen, Format, Value);
 #endif
         Stream->StrOutPtr += CCount;
         Stream->StrOutLen -= CCount;
