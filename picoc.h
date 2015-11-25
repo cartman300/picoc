@@ -20,7 +20,7 @@
 
 
 #if defined(UNIX_HOST) || defined(WIN32)
-#include <setjmp.h>
+//#include <setjmp.h>
 
 /* this has to be a macro, otherwise errors will occur due to the stack being corrupt */
 #define PicocPlatformSetExitPoint(pc) setjmp((pc)->PicocExitBuf)
