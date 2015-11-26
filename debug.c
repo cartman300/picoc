@@ -4,6 +4,8 @@
 
 #include "interpreter.h"
 
+BEGIN
+
 #define BREAKPOINT_HASH(p) ( ((unsigned long)(p)->FileName) ^ (((p)->Line << 16) | ((p)->CharacterPos << 16)) )
 
 /* initialise the debugger by clearing the breakpoint table */
@@ -57,7 +59,7 @@ void DebugSetBreakpoint(struct ParseState *Parser)
     if (FoundEntry == NULL)
     {   
         /* add it to the table */
-        struct TableEntry *NewEntry = HeapAllocMem(pc, sizeof(struct TableEntry));
+        struct TableEntry *NewEntry = (struct TableEntry*)HeapAllocMem(pc, sizeof(struct TableEntry));
         if (NewEntry == NULL)
             ProgramFailNoParser(pc, "out of memory");
             
@@ -123,4 +125,6 @@ void DebugCheckStatement(struct ParseState *Parser)
 void DebugStep()
 {
 }
+
+END
 #endif /* !NO_DEBUGGER */

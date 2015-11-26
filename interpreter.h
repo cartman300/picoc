@@ -7,6 +7,9 @@
 
 #include "platform.h"
 
+#define EXPORT
+#define BEGIN namespace PicocNET {
+#define END }
 
 /* handy definitions */
 #ifndef TRUE
@@ -54,6 +57,7 @@ typedef FILE IOFILE;
 #define IS_NUMERIC_COERCIBLE(v) (IS_INTEGER_NUMERIC(v) || IS_FP(v))
 #define IS_NUMERIC_COERCIBLE_PLUS_POINTERS(v,ap) (IS_NUMERIC_COERCIBLE(v) || IS_POINTER_COERCIBLE(v,ap))
 
+BEGIN
 
 struct Table;
 struct Picoc_Struct;
@@ -180,7 +184,7 @@ struct FuncDef
     int VarArgs;                    /* has a variable number of arguments after the explicitly specified ones */
     struct ValueType **ParamType;   /* array of parameter types */
     char **ParamName;               /* array of parameter names */
-    void (*Intrinsic)();            /* intrinsic call address or NULL */
+    void (*Intrinsic)(...);            /* intrinsic call address or NULL */
     struct ParseState Body;         /* lexical tokens of the function body if not intrinsic */
 };
 
@@ -227,6 +231,25 @@ struct Value
     char OutOfScope;
 };
 
+union TableEntryPayload
+{
+    struct ValueEntry
+    {
+        char *Key;              /* points to the shared string table */
+        struct Value *Val;      /* the value we're storing */
+    } v;                        /* used for tables of values */
+        
+    char Key[1];                /* dummy size - used for the shared string table */
+        
+    struct BreakpointEntry      /* defines a breakpoint */
+    {
+        const char *FileName;
+        short int Line;
+        short int CharacterPos;
+    } b;
+        
+};
+
 /* hash table data structure */
 struct TableEntry
 {
@@ -235,24 +258,7 @@ struct TableEntry
     unsigned short DeclLine;
     unsigned short DeclColumn;
 
-    union TableEntryPayload
-    {
-        struct ValueEntry
-        {
-            char *Key;              /* points to the shared string table */
-            struct Value *Val;      /* the value we're storing */
-        } v;                        /* used for tables of values */
-        
-        char Key[1];                /* dummy size - used for the shared string table */
-        
-        struct BreakpointEntry      /* defines a breakpoint */
-        {
-            const char *FileName;
-            short int Line;
-            short int CharacterPos;
-        } b;
-        
-    } p;
+    union TableEntryPayload p;
 };
     
 struct Table
@@ -586,8 +592,8 @@ EXPORT void LibPrintf(struct ParseState *Parser, struct Value *ReturnValue, stru
  * void PicocCleanup();
  * void PicocPlatformScanFile(const char *FileName);
  * extern int PicocExitValue; */
-EXPORT void ProgramFail(struct ParseState *Parser, const char *Message, ...);
-EXPORT void ProgramFailNoParser(Picoc *pc, const char *Message, ...);
+EXPORT void ProgramFail(struct ParseState *Parser, const char* Message, ...);
+EXPORT void ProgramFailNoParser(Picoc *pc, const char* Message, ...);
 EXPORT void AssignFail(struct ParseState *Parser, const char *Format, struct ValueType *Type1, struct ValueType *Type2, int Num1, int Num2, const char *FuncName, int ParamNo);
 EXPORT void LexFail(Picoc *pc, struct LexState *Lexer, const char *Message, ...);
 EXPORT void PlatformInit(Picoc *pc);
@@ -610,8 +616,8 @@ EXPORT void IncludeFile(Picoc *pc, char *Filename);
  * void PicocIncludeAllSystemHeaders(); */
  
 /* debug.c */
-EXPORT void DebugInit();
-EXPORT void DebugCleanup();
+EXPORT void DebugInit(Picoc* pc);
+EXPORT void DebugCleanup(Picoc* pc);
 EXPORT void DebugCheckStatement(struct ParseState *Parser);
 
 
@@ -651,5 +657,7 @@ EXPORT void StdboolSetupFunc(Picoc *pc);
 extern const char UnistdDefs[];
 extern struct LibraryFunction UnistdFunctions[];
 EXPORT void UnistdSetupFunc(Picoc *pc);
+
+END
 
 #endif /* INTERPRETER_H */

@@ -4,6 +4,7 @@
 #include "picoc.h"
 #include "interpreter.h"
 
+BEGIN
 #ifndef NO_HASH_INCLUDE
 
 
@@ -46,7 +47,7 @@ void IncludeCleanup(Picoc *pc)
 /* register a new build-in include file */
 void IncludeRegister(Picoc *pc, const char *IncludeName, void (*SetupFunction)(Picoc *pc), struct LibraryFunction *FuncList, const char *SetupCSource)
 {
-    struct IncludeLibrary *NewLib = HeapAllocMem(pc, sizeof(struct IncludeLibrary));
+    struct IncludeLibrary *NewLib = (struct IncludeLibrary*)HeapAllocMem(pc, sizeof(struct IncludeLibrary));
     NewLib->IncludeName = TableStrRegister(pc, IncludeName);
     NewLib->SetupFunction = SetupFunction;
     NewLib->FuncList = FuncList;
@@ -101,3 +102,4 @@ void IncludeFile(Picoc *pc, char *FileName)
 }
 
 #endif /* NO_HASH_INCLUDE */
+END

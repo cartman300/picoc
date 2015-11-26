@@ -23,7 +23,7 @@
 //#include <setjmp.h>
 
 /* this has to be a macro, otherwise errors will occur due to the stack being corrupt */
-#define PicocPlatformSetExitPoint(pc) setjmp((pc)->PicocExitBuf)
+#define PicocPlatformSetExitPoint(pc) 0 //setjmp((pc)->PicocExitBuf)
 #endif
 
 #ifdef SURVEYOR_HOST
@@ -32,6 +32,8 @@ extern int PicocExitBuf[];
 
 #define PicocPlatformSetExitPoint(pc) setjmp((pc)->PicocExitBuf)
 #endif
+
+BEGIN
 
 /* parse.c */
 EXPORT void PicocParse(Picoc *pc, const char *FileName, const char *Source, int SourceLen, int RunIt, int CleanupNow, int CleanupSource, int EnableDebugger);
@@ -45,5 +47,7 @@ EXPORT void PicocPlatformScanFile(Picoc *pc, const char *FileName);
 
 /* include.c */
 EXPORT void PicocIncludeAllSystemHeaders(Picoc *pc);
+
+END
 
 #endif /* PICOC_H */

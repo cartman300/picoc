@@ -5,6 +5,8 @@
 /* stack grows up from the bottom and heap grows down from the top of heap space */
 #include "interpreter.h"
 
+BEGIN
+
 #ifdef DEBUG_HEAP
 void ShowBigList(Picoc *pc)
 {
@@ -25,7 +27,7 @@ void HeapInit(Picoc *pc, int StackOrHeapSize)
     int AlignOffset = 0;
     
 #ifdef USE_MALLOC_STACK
-    pc->HeapMemory = malloc(StackOrHeapSize);
+    pc->HeapMemory = (unsigned char*)malloc(StackOrHeapSize);
     pc->HeapBottom = NULL;                     /* the bottom of the (downward-growing) heap */
     pc->StackFrame = NULL;                     /* the current stack frame */
     pc->HeapStackTop = NULL;                          /* the top of the stack */
@@ -66,7 +68,7 @@ void HeapCleanup(Picoc *pc)
  * clears memory. can return NULL if out of stack space */
 void *HeapAllocStack(Picoc *pc, int Size)
 {
-    char *NewMem = pc->HeapStackTop;
+    char *NewMem = (char*)pc->HeapStackTop;
     char *NewTop = (char *)pc->HeapStackTop + MEM_ALIGN(Size);
 #ifdef DEBUG_HEAP
     printf("HeapAllocStack(%ld) at 0x%lx\n", (unsigned long)MEM_ALIGN(Size), (unsigned long)pc->HeapStackTop);
@@ -276,3 +278,4 @@ void HeapFreeMem(Picoc *pc, void *Mem)
 #endif
 }
 
+END

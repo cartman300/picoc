@@ -2,6 +2,8 @@
 #include <errno.h>
 #include "../interpreter.h"
 
+BEGIN
+
 #ifndef BUILTIN_MINI_STDLIB
 
 #ifdef EACCES
@@ -653,3 +655,5 @@ void StdErrnoSetupFunc(Picoc *pc)
 }
 
 #endif /* !BUILTIN_MINI_STDLIB */
+
+END

@@ -1,6 +1,8 @@
 /* string.h library for large systems - small embedded systems use clibrary.c instead */
 #include "../interpreter.h"
 
+BEGIN
+
 #ifndef BUILTIN_MINI_STDLIB
 
 static int trueValue = 1;
@@ -20,3 +22,5 @@ void StdboolSetupFunc(Picoc *pc)
 }
 
 #endif /* !BUILTIN_MINI_STDLIB */
+
+END

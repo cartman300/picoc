@@ -1,6 +1,8 @@
 /* stdio.h library for large systems - small embedded systems use clibrary.c instead */
 #include "../interpreter.h"
 
+BEGIN
+
 #ifndef BUILTIN_MINI_STDLIB
 #ifndef NO_FP
 
@@ -86,7 +88,7 @@ void MathFmod(struct ParseState *Parser, struct Value *ReturnValue, struct Value
 
 void MathFrexp(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
 {
-    ReturnValue->Val->FP = frexp(Param[0]->Val->FP, Param[1]->Val->Pointer);
+    ReturnValue->Val->FP = frexp(Param[0]->Val->FP, (int*)Param[1]->Val->Pointer);
 }
 
 void MathLdexp(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
@@ -106,7 +108,7 @@ void MathLog10(struct ParseState *Parser, struct Value *ReturnValue, struct Valu
 
 void MathModf(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
 {
-    ReturnValue->Val->FP = modf(Param[0]->Val->FP, Param[0]->Val->Pointer);
+    ReturnValue->Val->FP = modf(Param[0]->Val->FP, (double*)Param[0]->Val->Pointer);
 }
 
 void MathPow(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
@@ -185,3 +187,5 @@ void MathSetupFunc(Picoc *pc)
 
 #endif /* !NO_FP */
 #endif /* !BUILTIN_MINI_STDLIB */
+
+END
